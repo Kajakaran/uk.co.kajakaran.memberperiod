@@ -1,6 +1,6 @@
 # uk.co.kajakaran.memberperiod
 
-# Membership Period Functionality for CiviCRM Membership#
+# Membership Period Functionality for CiviCRM Membership # 
 
 ### Overview ###
 
@@ -26,6 +26,7 @@ The membership period should be connected to a contribution record if a payment 
 ### Usage ###
 
 * Create/Renew membership with membership payment and look for new membership period(s) tab for membership periods for that membership in contact summary.
+![Screenshot of membership period tabs](images/membeship_period.png)
 
 ### Support ###
 
