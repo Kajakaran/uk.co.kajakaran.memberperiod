@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Memberperiod</base>
+  <class>MembershipPeriod</class>
+  <name>civicrm_membership_period</name>
+  <comment>Membership Period Table</comment>
+  <add>4.7</add>
+  <log>true</log>
+  <field>
+    <name>id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Unique Membership Period ID</comment>
+    <add>4.7</add>
+  </field>
+  <primaryKey>
+    <name>id</name>
+    <autoincrement>true</autoincrement>
+  </primaryKey>
+ <field>
+    <name>membership_id</name>
+    <title>Membership</title>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>FK to Membership table</comment>
+    <add>4.7</add>
+  </field>
+  <foreignKey>
+    <name>membership_id</name>
+    <table>civicrm_membership</table>
+    <key>id</key>
+    <add>4.7</add>
+    <onDelete>CASCADE</onDelete>
+  </foreignKey>
+  <field>
+    <name>contribution_id</name>
+    <title>Contribution</title>
+    <type>int unsigned</type>
+    <comment>FK to contribution table.</comment>
+    <add>4.7</add>
+  </field>
+  <foreignKey>
+    <name>contribution_id</name>
+    <table>civicrm_contribution</table>
+    <key>id</key>
+    <add>4.7</add>
+    <onDelete>CASCADE</onDelete>
+  </foreignKey>
+  <field>
+    <name>start_date</name>
+    <uniqueName>membership_start_date</uniqueName>
+    <title>Membership Start Date</title>
+    <type>date</type>
+    <import>true</import>
+    <headerPattern>/(member(ship)?.)?start(s)?(.date$)?/i</headerPattern>
+    <dataPattern>/\d{4}-?\d{2}-?\d{2}/</dataPattern>
+    <comment>Beginning of current uninterrupted membership period.</comment>
+    <add>4.7</add>
+    <html>
+      <type>Select Date</type>
+      <formatType>activityDate</formatType>
+    </html>
+  </field>
+  <field>
+    <name>end_date</name>
+    <uniqueName>membership_end_date</uniqueName>
+    <title>Membership Expiration Date</title>
+    <type>date</type>
+    <import>true</import>
+    <headerPattern>/(member(ship)?.)?end(s)?(.date$)?/i</headerPattern>
+    <dataPattern>/\d{4}-?\d{2}-?\d{2}/</dataPattern>
+    <comment>Current membership period expire date.</comment>
+    <add>4.7</add>
+    <html>
+      <type>Select Date</type>
+      <formatType>activityDate</formatType>
+    </html>
+</field>
+  <index>
+    <name>UI_contribution_membership</name>
+    <unique>true</unique>
+    <fieldName>contribution_id</fieldName>
+    <fieldName>membership_id</fieldName>
+    <add>4.7</add>
+  </index>
+</table>
