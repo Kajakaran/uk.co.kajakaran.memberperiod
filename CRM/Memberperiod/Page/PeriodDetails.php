@@ -1,5 +1,4 @@
 <?php
-
 require_once 'CRM/Core/Page.php';
 
 class CRM_Memberperiod_Page_PeriodDetails extends CRM_Core_Page {
@@ -7,7 +6,6 @@ class CRM_Memberperiod_Page_PeriodDetails extends CRM_Core_Page {
   function run() {  
     // retrieve contact id
     $contactID  = (int) CRM_Utils_Request::retrieve( 'cid', 'Positive', $this, true, NULL, 'GET');
-    
     // retrieve membership ids of this contact
     $membershipIds = self::getMembershipIds($contactID);
     $data = array();
@@ -30,12 +28,14 @@ class CRM_Memberperiod_Page_PeriodDetails extends CRM_Core_Page {
           'contact_id' => $contactID);
       }
     }
-    CRM_Core_Error::debug_var('$data', $data);
     // assign it to this form
     $this->assign('data', $data);
     parent::run();
   }
   
+  /* 
+   * function to get memberships for a contact
+   */
   static function getMembershipIds($contactId) {
     if(empty($contactId)) {
       return;      

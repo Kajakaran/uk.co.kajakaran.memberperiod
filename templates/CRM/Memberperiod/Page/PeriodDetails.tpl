@@ -15,30 +15,28 @@
                 </tr>
               </thead>
             {foreach from=$membership key=count item=period}
-	  <tr id="group_contact-{$period.id}" class="crm-entity {cycle values="odd-row,even-row"}">
-            {assign var=contactId value=$period.contact_id}
-            <td class="bold">
-		{capture assign=crmURL}{crmURL p='civicrm/contact/view/membership' q="reset=1&id=$membershipId&cid=$contactId&action=view&context=membership&selectedChild=member"}{/capture}
-		<a href="{$crmURL}" target="_blank">
-		   {$membershipId}
-		</a>
-	    
-	    </td>
-            <td>{$count}</td>
-	    <td>{$period.start_date|crmDate}</td>
-	    <td>{$period.end_date|crmDate}</td>
-            <td>
-            {assign var=contributionId value=$period.contribution_id}
-		{capture assign=crmURL}{crmURL p='civicrm/contact/view/contribution' q="reset=1&id=$contributionId&cid=$contactId&action=view&context=membership&selectedChild=contribute"}{/capture}
-		<a href="{$crmURL}" target="_blank">
-		  {$period.contribution_amount|crmMoney}
-		</a>
-          </td>
-	   
-	  </tr>
-                {/foreach}
-                </table>
-                <br/>
+            <tr id="group_contact-{$period.id}" class="crm-entity {cycle values="odd-row,even-row"}">
+              {assign var=contactId value=$period.contact_id}
+              <td class="bold">
+                  {capture assign=crmURL}{crmURL p='civicrm/contact/view/membership' q="reset=1&id=$membershipId&cid=$contactId&action=view&context=membership&selectedChild=member"}{/capture}
+                  <a href="{$crmURL}" target="_blank">
+                     {$membershipId}
+                  </a>
+              </td>
+              <td>{$count}</td>
+              <td>{$period.start_date|crmDate}</td>
+              <td>{$period.end_date|crmDate}</td>
+              <td>
+              {assign var=contributionId value=$period.contribution_id}
+              {capture assign=crmURL}{crmURL p='civicrm/contact/view/contribution' q="reset=1&id=$contributionId&cid=$contactId&action=view&context=membership&selectedChild=contribute"}{/capture}
+              <a href="{$crmURL}" target="_blank">
+                  {$period.contribution_amount|crmMoney}
+              </a>
+              </td>
+            </tr>
+            {/foreach}
+            </table>
+            <br/>
 	{/foreach}
   </div>
 {/if}

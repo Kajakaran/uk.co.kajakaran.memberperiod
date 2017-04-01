@@ -157,7 +157,7 @@ function memberperiod_civicrm_navigationMenu(&$menu) {
 function memberperiod_civicrm_post($op, $objectName, $objectId, &$objectRef) {
   // when new membership is created
   if ($objectName == 'Membership' && ($op == 'create' || $op == 'edit')) {
-    // find membership period start date from membership end date
+    // find membership period start date from membership end date if it is a edit
     if ($op == 'create') {
       $membershipPeriodStartDate = $objectRef->start_date;
     } else {
@@ -170,15 +170,6 @@ function memberperiod_civicrm_post($op, $objectName, $objectId, &$objectRef) {
       'end_date' => CRM_Utils_Date::processDate($objectRef->end_date),
       'membership_id' => $objectId,
     ));
-    /*
-    $membershipPeriod = new CRM_Memberperiod_BAO_MembershipPeriod();
-    $membershipPeriod->start_date = $membershipPeriodStartDate;
-    $membershipPeriod->end_date = $objectRef->end_date;
-    $membershipPeriod->membership_id = $objectId;
-    $membershipPeriod->save();
-    $membershipPeriod->free();
-     * 
-     */
   }
   // when membership payment is created
   if ($objectName == 'MembershipPayment' && $op == 'create') {
@@ -203,31 +194,11 @@ function memberperiod_civicrm_post($op, $objectName, $objectId, &$objectRef) {
         'membership_id' => $membershipId,
         'contribution_id' => $contributionId,
       ));
-      /*
-      $membershipPeriod = new CRM_Memberperiod_BAO_MembershipPeriod();
-      $membershipPeriod->start_date = $membershipPeriodStartDate;
-      $membershipPeriod->end_date = CRM_Utils_Date::processDate($membershipEndDate);
-      $membershipPeriod->membership_id = $membershipId;
-      $membershipPeriod->contribution_id = $contributionId;
-      $membershipPeriod->save();
-      $membershipPeriod->free();
-       * 
-       */
     } catch (CiviCRM_API3_Exception $e) {
         CRM_Core_Error::debug_var('api error while getting membership end date', $e->getMessage());
     }
-    
-    
-    CRM_Core_Error::debug_var('$op', $op);
-    CRM_Core_Error::debug_var('$objectName', $objectName);
-    CRM_Core_Error::debug_var('$objectId', $objectId);
-    CRM_Core_Error::debug_var('$objectRef', $objectRef);
-    
   }
-  
 }
-
-
 
 /* 
  * Function to get membership period start date from end date and membership type
@@ -246,16 +217,12 @@ function _memberperiod_get_period_start_date($membershipTypeId, $membershipEndDa
       'id' => $membershipTypeId,
     ));
     
-    CRM_Core_Error::debug_var('$result', $result);
     // find membership period start date from membership end date from duration unit and duration interval
     $durationUnit = $result['values'][0]['duration_unit'];
     $durationInterval = $result['values'][0]['duration_interval'];
     $membershipPeriodStartDate = date("Y-m-d",strtotime(date("Y-m-d", strtotime($membershipEndDate)) . " -".$durationInterval." $durationUnit"));
     // fix me - start date should be 1 day extra
     $membershipPeriodStartDate = date("Y-m-d", strtotime($membershipPeriodStartDate . ' +1 day'));
-    CRM_Core_Error::debug_var('$durationUnit', $durationUnit);
-    CRM_Core_Error::debug_var('$durationInterval', $durationInterval);
-    CRM_Core_Error::debug_var('$membershipPeriodStartDate', $membershipPeriodStartDate);
   } catch (CiviCRM_API3_Exception $e) {
     CRM_Core_Error::debug_var('api error while calling membership type\s duration', $e->getMessage());
   }
@@ -268,7 +235,7 @@ function memberperiod_civicrm_tabs( &$tabs, $contactID ) {
   require_once 'CRM/Memberperiod/Page/PeriodDetails.php';
   $membershipIds = CRM_Memberperiod_Page_PeriodDetails::getMembershipIds($contactID);
   if (!empty($membershipIds)) {
-    $url = CRM_Utils_System::url( 'civicrm/contact/memberperiodinfo', 'snippet=2&cid='.$contactID);
+    $url    = CRM_Utils_System::url( 'civicrm/contact/memberperiodinfo', 'snippet=2&cid='.$contactID);
     $tabs[] = array( 'id'    => 'memberperiod',
                      'url'   => $url,
                      'title' => 'Membership Period(s)',
