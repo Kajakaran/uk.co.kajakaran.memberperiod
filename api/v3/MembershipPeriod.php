@@ -9,7 +9,7 @@
  * @see http://wiki.civicrm.org/confluence/display/CRMDOC/API+Architecture+Standards
  */
 function _civicrm_api3_membership_period_create_spec(&$spec) {
-  $spec['start_date']['api.required'] = 1;
+  $spec['start_date']['api.required'] = 0;
   $spec['membership_id']['api.required'] = 1;
   $spec['end_date']['api.required'] = 0;
   $spec['contribution_id']['api.required'] = 0;

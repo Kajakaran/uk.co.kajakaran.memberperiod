@@ -155,6 +155,7 @@ function memberperiod_civicrm_navigationMenu(&$menu) {
 } // */
 
 function memberperiod_civicrm_post($op, $objectName, $objectId, &$objectRef) {
+  
   // when new membership is created
   if ($objectName == 'Membership' && ($op == 'create' || $op == 'edit')) {
     // find membership period start date from membership end date if it is a edit
@@ -164,12 +165,17 @@ function memberperiod_civicrm_post($op, $objectName, $objectId, &$objectRef) {
       $membershipPeriodStartDate = _memberperiod_get_period_start_date($objectRef->membership_type_id, $objectRef->end_date);
     }
     // create new membership period entry for this membership
-    $result = civicrm_api3('MembershipPeriod', 'create', array(
-      'sequential' => 1,
-      'start_date' => $membershipPeriodStartDate,
-      'end_date' => CRM_Utils_Date::processDate($objectRef->end_date),
-      'membership_id' => $objectId,
-    ));
+    try {
+      $result = civicrm_api3('MembershipPeriod', 'create', array(
+        'sequential' => 1,
+        'start_date' => $membershipPeriodStartDate,
+        'end_date' => CRM_Utils_Date::processDate($objectRef->end_date),
+        'membership_id' => $objectId,
+      ));
+      
+    } catch (Exception $e) {
+      CRM_Core_Error::debug_var('api error while creating memberhsip period in membership post ', $e->getMessage());
+    }
   }
   // when membership payment is created
   if ($objectName == 'MembershipPayment' && $op == 'create') {
@@ -187,13 +193,18 @@ function memberperiod_civicrm_post($op, $objectName, $objectId, &$objectRef) {
       $membershipTypeId  = $result['values'][0]['membership_type_id'];
       $membershipPeriodStartDate = _memberperiod_get_period_start_date($membershipTypeId, $membershipEndDate);
        // create new period entry for this membership
-      $result = civicrm_api3('MembershipPeriod', 'create', array(
-        'sequential' => 1,
-        'start_date' => $membershipPeriodStartDate,
-        'end_date' => CRM_Utils_Date::processDate($membershipEndDate),
-        'membership_id' => $membershipId,
-        'contribution_id' => $contributionId,
-      ));
+      try {
+        $result = civicrm_api3('MembershipPeriod', 'create', array(
+          'sequential' => 1,
+          'start_date' => $membershipPeriodStartDate,
+          'end_date' => CRM_Utils_Date::processDate($membershipEndDate),
+          'membership_id' => $membershipId,
+          'contribution_id' => $contributionId,
+        ));
+        
+      } catch (Exception $e) {
+        CRM_Core_Error::debug_var('api error while creating memberhsip period ', $e->getMessage());
+      }
     } catch (CiviCRM_API3_Exception $e) {
         CRM_Core_Error::debug_var('api error while getting membership end date', $e->getMessage());
     }
